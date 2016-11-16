@@ -1,5 +1,5 @@
 
-from tuple_operations import tuple_inner_product
+from tuple_operations import tuple_inner_product, vector_inner_product
 
 # After several motivational lectures, in a lecture titled "Collaborative Filtering Algorithm," at 1:10 Ng reveals
 # his optimization objective for collaborative filtering. However, he then simplifies it by having x and theta be
@@ -17,7 +17,9 @@ from tuple_operations import tuple_inner_product
 def make_optimization_objective(lamb, reviews):
 
     def optimization_objective(x_list, theta_list):
-        # Oh boy, here we go.  As you can see at 1:10 of the video, what Ng calls J is decently complex.
+        # As you can see at 1:10 of the video, what Ng calls J is decently complex.
+        # Thanks to the various vector and tuple operations defined in tuple_operations.py, this
+        # complexity is somewhat hidden.
 
         first_sum = 0.0
         second_sum = 0.0
@@ -35,11 +37,9 @@ def make_optimization_objective(lamb, reviews):
 
             first_sum += delta * delta
 
-        for x in x_list:
-            second_sum += tuple_inner_product(x, x)
+        second_sum += vector_inner_product(x_list, x_list)
 
-        for theta in theta_list:
-            third_sum += tuple_inner_product(theta, theta)
+        third_sum += vector_inner_product(theta_list, theta_list)
 
         return (first_sum + lamb * second_sum + lamb * third_sum) / 2.0
 
