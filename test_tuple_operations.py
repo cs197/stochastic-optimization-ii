@@ -4,7 +4,7 @@
 
 import unittest
 
-from tuple_operations import tuple_sum, tuple_difference, tuple_inner_product
+from tuple_operations import tuple_sum, tuple_difference, tuple_inner_product, tuple_multiply
 
 
 tuple1_for_testing = (3, 5)
@@ -22,6 +22,11 @@ class TestTupleOperations(unittest.TestCase):
         self.assertEqual((2, 2), vector1_minus_vector2)
 
     def test_tuple_inner_product(self):
-        vector1_inner_product_vector2 = tuple_inner_product(tuple2_for_testing, tuple1_for_testing)
+        tuple1_inner_product_tuple2 = tuple_inner_product(tuple2_for_testing, tuple1_for_testing)
         expected_inner_product = 50
-        self.assertEqual(vector1_inner_product_vector2, expected_inner_product)
+        self.assertEqual(tuple1_inner_product_tuple2, expected_inner_product)
+
+    def test_tuple_multiply(self):
+        tuple1_times_2 = tuple_multiply(2, tuple1_for_testing)
+        expected_tuple = (6, 10)
+        self.assertEqual(tuple1_times_2, expected_tuple)
