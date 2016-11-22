@@ -8,6 +8,12 @@
 from tuple_operations import vector_sum, vector_difference
 
 
+def validate(gradient_list):
+    for gradient_tuple in gradient_list:
+        for tuple_component in gradient_tuple:
+            assert abs(tuple_component) < 100
+
+
 # This is the implementation of Spall's equation 6.6.
 def simultaneous_perturbation(optimization_objective, x_vector, theta_vector, x_perturbation, theta_perturbation):
     optimization_objective_plus = optimization_objective(vector_sum(x_vector, x_perturbation),
@@ -20,5 +26,8 @@ def simultaneous_perturbation(optimization_objective, x_vector, theta_vector, x_
 
     gradient_x = [tuple([prefactor / tuple_component for tuple_component in x]) for x in x_perturbation]
     gradient_theta = [tuple([prefactor / tuple_component for tuple_component in theta]) for theta in theta_perturbation]
+
+    validate(gradient_x)
+    validate(gradient_theta)
 
     return gradient_x, gradient_theta
