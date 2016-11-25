@@ -43,13 +43,13 @@ def optimize_ng_example():
         theta_list = vector_sum(theta_list, delta_theta)
         objective_value = optimization_objective_function(x_list, theta_list)
         if abs(objective_value - objective_old_value) < convergence_criterion:
-            print "Terminating after {0} iterations. The optimization value is {1}".format(str(idx),
-                                                                                           str(objective_value))
+            print "Terminating after {0} iterations. The optimization value is {1}.".format(str(idx),
+                                                                                            str(objective_value))
             break
         else:
-            if idx % 10 == 0:
-                print "After {0} iterations, the optimization value is {1}".format(str(idx),
-                                                                                   str(objective_value))
+            if idx % 100 == 0:
+                print "After {0} iterations, the optimization value is {1}.".format(str(idx),
+                                                                                    str(objective_value))
 
     print "Feature vector for the movies is: " + str(x_list) + "."
     print "Feature affinity vector for the users is: " + str(theta_list) + "."
@@ -61,8 +61,8 @@ def optimize_ng_example():
         features = x_list[idx_movie]
         prediction = tuple_inner_product(features_affinity, features)
         rating = review.rating
-        print "{0}'s rating for \"{1}\": predicted {2}, actual {3}".format(USERS[idx_user], MOVIES[idx_movie],
-                                                                           prediction, rating)
+        print "{0}'s rating for \"{1}\": predicted {2}, actual {3}.".format(USERS[idx_user], MOVIES[idx_movie],
+                                                                            prediction, rating)
 
 
 if __name__ == "__main__":
