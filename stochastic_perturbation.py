@@ -4,7 +4,7 @@ from random import gauss
 from data_from_ng import N, N_M, N_U
 
 # I am concerned that perturbations too close to zero will result in precision problems
-TOO_SMALL = 0.00001
+TOO_SMALL = 0.01
 
 
 # This does just one number at a time, but it has a guard to guarantee that the number is greater than TOO_SMALL

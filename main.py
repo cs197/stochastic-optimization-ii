@@ -1,54 +1,33 @@
-from data_from_ng import REVIEWS
+from data_from_ng import REVIEWS, USERS, MOVIES
 
 from optimization_objective import make_optimization_objective
 
 from stochastic_perturbation import generate_perturbation
 
-from simultaneous_perturbation import simultaneous_perturbation
+from simultaneous_perturbation import simultaneous_perturbation, gain_a, gain_c
 
-from tuple_operations import vector_sum, vector_multiply
+from tuple_operations import vector_sum, vector_multiply, tuple_inner_product
 
 from random import seed
-
-from math import exp, log
-
-# Spall's gain parameters
-
-gain_a_multiplier = 0.01
-gain_a_fudge = 2.0
-alpha = 0.2
-
-
-def gain_a(idx):
-    return gain_a_multiplier / exp(alpha * log(idx + 1 + gain_a_fudge))
-
-
-gain_c_multiplier = 0.01
-gamma = 0.2
-
-
-def gain_c(idx):
-    return gain_c_multiplier / exp(gamma * log(idx + 1))
 
 
 # This is an implementation of Equation 6.4 of Spall
 # in http://www.jhuapl.edu/spsa/PDF-SPSA/Handbook04_StochasticOptimization.pdf
-# Spall does not give a lot of guidance on how the gains a_k and c_k should be chosen, and the choices affect
 # the convergence.  My routine appears to converge with my choices, but I am not confident it is correct.
 def optimize_ng_example():
-    lamb = 1.0  # I'd call this lambda, except in Python lambda is a keyword. Initialize to 1.0. What should it be?
+    lamb = 0.1  # I'd call this lambda, except in Python lambda is a keyword.
     optimization_objective_function = make_optimization_objective(lamb, REVIEWS)
 
-    convergence_criterion = 0.0001
+    convergence_criterion = 0.00000001
 
     # Our initial guess -- totally random -- no method or logic here.
-    idx = 1
-    c = gain_c(idx)
-    x_list, theta_list = generate_perturbation(c)
+    idx = 0
+    a = gain_a(idx)
+    x_list, theta_list = generate_perturbation(a)
     objective_value = optimization_objective_function(x_list, theta_list)
 
-    idx = 1
     while True:
+        idx += 1
         objective_old_value = objective_value
         c = gain_c(idx)
         x_perturbation, theta_perturbation = generate_perturbation(c)
@@ -72,10 +51,18 @@ def optimize_ng_example():
                 print "After {0} iterations, the optimization value is {1}".format(str(idx),
                                                                                    str(objective_value))
 
-            idx += 1
-
     print "Feature vector for the movies is: " + str(x_list) + "."
     print "Feature affinity vector for the users is: " + str(theta_list) + "."
+
+    for review in REVIEWS:
+        idx_user = review.user
+        idx_movie = review.movie
+        features_affinity = theta_list[idx_user]
+        features = x_list[idx_movie]
+        prediction = tuple_inner_product(features_affinity, features)
+        rating = review.rating
+        print "{0}'s rating for \"{1}\": predicted {2}, actual {3}".format(USERS[idx_user], MOVIES[idx_movie],
+                                                                           prediction, rating)
 
 
 if __name__ == "__main__":

@@ -7,11 +7,35 @@
 
 from tuple_operations import vector_sum, vector_difference
 
+from math import exp, log
+
+RIDICULOUS_GRADIENT = 10000
+
+# Spall's gain parameters
+
+gain_a_multiplier = 0.01
+gain_a_fudge = 2.0
+alpha = 0.2
+
+
+# gain_a is the multiple of the gradient
+def gain_a(idx):
+    return gain_a_multiplier / exp(alpha * log(idx + 1 + gain_a_fudge))
+
+
+gain_c_multiplier = 0.1
+gamma = 0.2
+
+
+# gain_c is the multiple of the perturbation that determines the gradient
+def gain_c(idx):
+    return gain_c_multiplier / exp(gamma * log(idx + 1))
+
 
 def validate(gradient_list):
     for gradient_tuple in gradient_list:
         for tuple_component in gradient_tuple:
-            assert abs(tuple_component) < 100
+            assert abs(tuple_component) < RIDICULOUS_GRADIENT
 
 
 # This is the implementation of Spall's equation 6.6.
