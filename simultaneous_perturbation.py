@@ -11,7 +11,13 @@ from math import exp, log
 
 RIDICULOUS_GRADIENT = 10000
 
-# Spall's gain parameters
+# This file contains an implementation of Spall's gain parameters and his equation 6.6.
+# http://www.jhuapl.edu/spsa/PDF-SPSA/Handbook04_StochasticOptimization.pdf
+
+# Implementation of Spall's gain parameters
+
+# Spall's a <=> my gain_a_multiplier.
+# Spall's A <=> my gain_a_fudge.
 
 gain_a_multiplier = 0.01
 gain_a_fudge = 2.0
@@ -22,6 +28,7 @@ alpha = 0.2
 def gain_a(idx):
     return gain_a_multiplier / exp(alpha * log(idx + 1 + gain_a_fudge))
 
+# Spall's c <=> my gain_c_multiplier.
 
 gain_c_multiplier = 0.1
 gamma = 0.2

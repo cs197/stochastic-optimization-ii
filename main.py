@@ -6,21 +6,29 @@ from stochastic_perturbation import generate_perturbation
 
 from simultaneous_perturbation import simultaneous_perturbation, gain_a, gain_c
 
+# The following could have been eliminated if I had wanted to add a dependency on numpy.
 from tuple_operations import vector_sum, vector_multiply, tuple_inner_product
 
 from random import seed
 
 
-# This is an implementation of Equation 6.4 of Spall
-# in http://www.jhuapl.edu/spsa/PDF-SPSA/Handbook04_StochasticOptimization.pdf
-# the convergence.  My routine appears to converge with my choices, but I am not confident it is correct.
+# This is an implementation of Equations 6.4 and 6.6 of Spall:
+# http://www.jhuapl.edu/spsa/PDF-SPSA/Handbook04_StochasticOptimization.pdf
+# Equation 6.6 is bizarre. Be sure to understand it before adopting this algorithm.
+# Spall's k <=> my idx.
+# Spall's a_k <=> my gain_a(idx).
+# Spall's c_k <=> my gain_c(idx).
+# I consider it an error, albeit an instructive one, that I am using a general-purpose
+# optimization algorithm to perform this particular optimization. The collaborative-filtering
+# optimization function is complicated looking but actually just a quadratic, and is
+# therefore amenable to special-purpose techniques.
 def optimize_ng_example():
-    lamb = 0.1  # I'd call this lambda, except in Python lambda is a keyword.
+    lamb = 0.1  # I'd call this lambda as Ng does, except in Python lambda is a keyword.
     optimization_objective_function = make_optimization_objective(lamb, REVIEWS)
 
     convergence_criterion = 0.00000001
 
-    # Our initial guess -- totally random -- no method or logic here.
+    # Our initial guess -- totally random of course.
     idx = 0
     a = gain_a(idx)
     x_list, theta_list = generate_perturbation(a)
